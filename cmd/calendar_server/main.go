@@ -20,7 +20,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	calendarGrpc.RegisterCalendarServiceServer(grpcServer, &calendarGrpc.CalendarServer{})
+	calendarGrpc.RegisterCalendarServiceServer(grpcServer, &calendarGrpc.CalendarServer{Logger: logger})
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		log.Fatalf("failed to serve %v", err)
