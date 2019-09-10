@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package grpc;
+
+import "google/protobuf/timestamp.proto";
+
+service CalendarService {
+    rpc CreateEvent (CreateCalendarEventRequest) returns (CalendarEventObject);
+    rpc ListEvents (ListCalendarEventRequest) returns (ListCalendarEventResponse);
+    rpc GetEvent (GetCalendarEventRequest) returns (CalendarEventObject);
+    rpc DeleteEvent (DeleteCalendarEventRequest) returns (DeleteCalendarEventResponse);
+}
+
+enum EventType {
+    UNKNOWN_EVENT_TYPE = 0;
+    TASK = 1;
+    MEETING = 2;
+}
+
+message CreateCalendarEventRequest {
+    string name = 1;
+    EventType type = 2;
+    google.protobuf.Timestamp startTime = 3;
+    google.protobuf.Timestamp endTime = 4;
+
+}
+
+
+message CalendarEventObject {
+    int64 id = 1;
+    string name = 2;
+    EventType type = 3;
+    google.protobuf.Timestamp startTime = 4;
+    google.protobuf.Timestamp endTime = 5;
+}
+
+message ListCalendarEventRequest {
+}
+
+message ListCalendarEventResponse {
+    repeated CalendarEventObject events = 1;
+}
+
+message GetCalendarEventRequest {
+    int64 id = 1;
+}
+
+message DeleteCalendarEventRequest {
+    int64 id = 1;
+}
+
+message DeleteCalendarEventResponse {
+}
+
