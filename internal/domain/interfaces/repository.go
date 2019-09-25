@@ -1,8 +1,8 @@
-package calendar
+package interfaces
 
 import (
 	"context"
-	"github.com/Azimkhan/go-calendar-grpc/internal/models"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 )
 
 type Repository interface {

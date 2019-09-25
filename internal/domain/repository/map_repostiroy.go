@@ -3,13 +3,13 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/Azimkhan/go-calendar-grpc/internal/calendar"
-	"github.com/Azimkhan/go-calendar-grpc/internal/models"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/interfaces"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 	"sync"
 )
 
 // Create new map calendar repository
-func NewMapCalendarRepository() calendar.Repository {
+func NewMapCalendarRepository() interfaces.Repository {
 	return &MapCalendarRepository{db: make(map[int64]*models.CalendarEvent), idSeq: 1}
 }
 

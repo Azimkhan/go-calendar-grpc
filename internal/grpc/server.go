@@ -1,22 +1,22 @@
-//go:generate protoc --go_out=plugins=grpc:. --proto_path=../../../../api/protobuf calendar_server.proto
+//go:generate protoc --go_out=plugins=grpc:. --proto_path=../../api/protobuf calendar_server.proto
 package grpc
 
 import (
 	"context"
-	"github.com/Azimkhan/go-calendar-grpc/internal/calendar"
-	"github.com/Azimkhan/go-calendar-grpc/internal/models"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/interfaces"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 	"github.com/golang/protobuf/ptypes"
 	"go.uber.org/zap"
 	"time"
 )
 
 type CalendarServer struct {
-	usecase calendar.Usecase
+	usecase interfaces.Usecase
 	logger  *zap.Logger
 }
 
 // Create server
-func NewCalendarServer(logger *zap.Logger, usecase calendar.Usecase) *CalendarServer {
+func NewCalendarServer(logger *zap.Logger, usecase interfaces.Usecase) *CalendarServer {
 	return &CalendarServer{logger: logger, usecase: usecase}
 }
 
