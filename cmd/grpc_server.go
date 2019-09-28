@@ -57,8 +57,8 @@ func init() {
 func construct(logger *zap.Logger) *grpc.Server {
 	grpcServer := grpc.NewServer()
 	calendarRepo := repository.NewMapCalendarRepository()
-	calendarUsecase := service.NewCalendarService(calendarRepo, time.Second*15)
-	server := calendarGrpc.NewCalendarServer(logger, calendarUsecase)
+	calendarService := service.NewCalendarService(calendarRepo, time.Second*15)
+	server := calendarGrpc.NewCalendarServer(logger, calendarService)
 	calendarGrpc.RegisterCalendarServiceServer(grpcServer, server)
 
 	return grpcServer

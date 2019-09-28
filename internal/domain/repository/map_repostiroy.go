@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"fmt"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/errors"
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/interfaces"
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 	"sync"
@@ -35,7 +35,7 @@ func (r *MapCalendarRepository) GetByID(ctx context.Context, id int64) (*models.
 	if e, ok := r.db[id]; ok {
 		return e, nil
 	}
-	return nil, fmt.Errorf("not found")
+	return nil, errors.EventNotFound
 }
 
 // Update
@@ -64,6 +64,6 @@ func (r *MapCalendarRepository) Delete(ctx context.Context, id int64) error {
 		delete(r.db, id)
 		return nil
 	}
-	return fmt.Errorf("no such element")
+	return errors.EventNotFound
 
 }

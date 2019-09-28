@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func NewCalendarService(repository interfaces.Repository, contextTimeout time.Duration) interfaces.Usecase {
+func NewCalendarService(repository interfaces.Repository, contextTimeout time.Duration) *CalendarService {
 	return &CalendarService{repository, contextTimeout}
 }
 
