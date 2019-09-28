@@ -107,7 +107,7 @@ func ListEvents(client calendarRpc.CalendarServiceClient) {
 }
 
 func createContext() context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), 400*time.Millisecond)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	return ctx
 }
 

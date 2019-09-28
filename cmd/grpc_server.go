@@ -17,9 +17,9 @@ package cmd
 
 import (
 	"github.com/Azimkhan/go-calendar-grpc/internal/configuration"
-	"github.com/Azimkhan/go-calendar-grpc/internal/domain/repository"
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/service"
 	calendarGrpc "github.com/Azimkhan/go-calendar-grpc/internal/grpc"
+	"github.com/Azimkhan/go-calendar-grpc/internal/maindb"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -29,6 +29,7 @@ import (
 )
 
 var addr string
+var dsn string
 
 // grpcServerCmd represents the grpcServer command
 var grpcServerCmd = &cobra.Command{
@@ -38,7 +39,7 @@ var grpcServerCmd = &cobra.Command{
 		logger := configuration.CreateLogger("configs/logger.json")
 		logger.Info("Application started.")
 
-		grpcServer := construct(logger)
+		grpcServer := construct(logger, dsn)
 		lis, err := net.Listen("tcp", addr)
 		if err != nil {
 			log.Fatalf("failed to listen %v", err)
@@ -52,12 +53,16 @@ var grpcServerCmd = &cobra.Command{
 
 func init() {
 	grpcServerCmd.Flags().StringVar(&addr, "address", "0.0.0.0:50051", "host:port to listen to")
+	grpcServerCmd.Flags().StringVar(&dsn, "dsn", "host=127.0.0.1 user=calendar password=calendar dbname=calendar", "database connection string")
 }
 
-func construct(logger *zap.Logger) *grpc.Server {
+func construct(logger *zap.Logger, string string) *grpc.Server {
 	grpcServer := grpc.NewServer()
-	calendarRepo := repository.NewMapCalendarRepository()
-	calendarService := service.NewCalendarService(calendarRepo, time.Second*15)
+	calendarRepo, err := maindb.NewPgEventRepository(dsn)
+	if err != nil {
+		log.Fatalf("Unable to create PG repository: %v", err)
+	}
+	calendarService := service.NewCalendarService(calendarRepo, time.Second*50)
 	server := calendarGrpc.NewCalendarServer(logger, calendarService)
 	calendarGrpc.RegisterCalendarServiceServer(grpcServer, server)
 

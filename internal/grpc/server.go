@@ -3,20 +3,20 @@ package grpc
 
 import (
 	"context"
-	"github.com/Azimkhan/go-calendar-grpc/internal/domain/interfaces"
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
+	"github.com/Azimkhan/go-calendar-grpc/internal/domain/service"
 	"github.com/golang/protobuf/ptypes"
 	"go.uber.org/zap"
 	"time"
 )
 
 type CalendarServer struct {
-	usecase interfaces.Usecase
+	usecase *service.CalendarService
 	logger  *zap.Logger
 }
 
 // Create server
-func NewCalendarServer(logger *zap.Logger, usecase interfaces.Usecase) *CalendarServer {
+func NewCalendarServer(logger *zap.Logger, usecase *service.CalendarService) *CalendarServer {
 	return &CalendarServer{logger: logger, usecase: usecase}
 }
 

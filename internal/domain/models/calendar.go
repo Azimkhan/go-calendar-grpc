@@ -13,9 +13,9 @@ const (
 type CalendarEvent struct {
 	Id         int64
 	Name       string
-	EventType  EventType
-	StartTime  time.Time
-	EndTime    time.Time
-	CreateTime time.Time
-	UpdateTime time.Time
+	EventType  EventType `db:"event_type"`
+	StartTime  time.Time `db:"start_time"`
+	EndTime    time.Time `db:"end_time"`
+	CreateTime time.Time `db:"create_time"`
+	UpdateTime time.Time `db:"update_time"`
 }
