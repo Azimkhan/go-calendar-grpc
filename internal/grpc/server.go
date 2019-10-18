@@ -98,6 +98,8 @@ func convertModelToCalendarEventObject(model *models.CalendarEvent) *CalendarEve
 func convertCreateCalendarEventRequestToModel(r *CreateCalendarEventRequest) *models.CalendarEvent {
 	startTime, _ := ptypes.Timestamp(r.StartTime)
 	endTime, _ := ptypes.Timestamp(r.EndTime)
+	startTime = startTime.UTC()
+	endTime = endTime.UTC()
 	return &models.CalendarEvent{
 		Id:         0,
 		Name:       r.Name,

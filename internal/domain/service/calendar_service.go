@@ -34,7 +34,7 @@ func (c *CalendarService) GetByID(ctx context.Context, id int64) (*models.Calend
 func (c *CalendarService) Update(ctx context.Context, record *models.CalendarEvent) error {
 	ctx, cancel := context.WithTimeout(ctx, c.contextTimeout)
 	defer cancel()
-	record.UpdateTime = time.Now()
+	record.UpdateTime = time.Now().UTC()
 	return c.repository.Update(ctx, record)
 }
 
@@ -42,7 +42,7 @@ func (c *CalendarService) Update(ctx context.Context, record *models.CalendarEve
 func (c *CalendarService) Store(ctx context.Context, record *models.CalendarEvent) error {
 	ctx, cancel := context.WithTimeout(ctx, c.contextTimeout)
 	defer cancel()
-	record.CreateTime = time.Now()
+	record.CreateTime = time.Now().UTC()
 	record.UpdateTime = record.CreateTime
 	return c.repository.Store(ctx, record)
 }
