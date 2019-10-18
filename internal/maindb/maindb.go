@@ -6,6 +6,7 @@ import (
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 func NewPgEventRepository(dsn string) (*PgEventRepository, error) {
@@ -23,6 +24,25 @@ func NewPgEventRepository(dsn string) (*PgEventRepository, error) {
 
 type PgEventRepository struct {
 	db *sqlx.DB
+}
+
+func (p *PgEventRepository) FetchByDateRange(from time.Time, to time.Time, ctx context.Context) ([]*models.CalendarEvent, error) {
+	rows, err := p.db.QueryxContext(ctx, "select id, name, event_type, start_time, end_time, create_time, update_time from "+
+		"events where start_time between $1 and $2", from, to)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []*models.CalendarEvent
+	for rows.Next() {
+		event := &models.CalendarEvent{}
+		scanErr := rows.StructScan(event)
+		if scanErr != nil {
+			return nil, scanErr
+		}
+		out = append(out, event)
+	}
+	return out, nil
 }
 
 func (p *PgEventRepository) Fetch(ctx context.Context) ([]*models.CalendarEvent, error) {

@@ -78,6 +78,7 @@ func DeleteEvent(client calendarRpc.CalendarServiceClient, id int64) {
 }
 
 func CreateEvent(now time.Time, name string, eventType calendarRpc.EventType, err error, client calendarRpc.CalendarServiceClient) int64 {
+	now = now.Add(time.Minute)
 	fmt.Println("CreateEvent()")
 	ctx := createContext()
 	start, _ := ptypes.TimestampProto(now)

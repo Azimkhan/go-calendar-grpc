@@ -6,6 +6,7 @@ import (
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/interfaces"
 	"github.com/Azimkhan/go-calendar-grpc/internal/domain/models"
 	"sync"
+	"time"
 )
 
 // Create new map calendar repository
@@ -17,6 +18,10 @@ type MapCalendarRepository struct {
 	wLock sync.Mutex
 	idSeq int64
 	db    map[int64]*models.CalendarEvent
+}
+
+func (r *MapCalendarRepository) FetchByDateRange(from time.Time, to time.Time, ctx context.Context) ([]*models.CalendarEvent, error) {
+	panic("implement me")
 }
 
 // Fetch
