@@ -23,7 +23,6 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	"log"
 	"net"
 	"time"
 )
@@ -39,14 +38,17 @@ var grpcServerCmd = &cobra.Command{
 		logger := configuration.CreateLogger("configs/logger.json")
 		logger.Info("Application started.")
 
-		grpcServer := construct(logger, dsn)
+		grpcServer, err := construct(logger)
+		if err != nil {
+			logger.Fatal("Unable to create grpc server", zap.Error(err))
+		}
 		lis, err := net.Listen("tcp", addr)
 		if err != nil {
-			log.Fatalf("failed to listen %v", err)
+			logger.Fatal("failed to listen %v", zap.Error(err))
 		}
 		err = grpcServer.Serve(lis)
 		if err != nil {
-			log.Fatalf("failed to serve %v", err)
+			logger.Fatal("failed to serve %v", zap.Error(err))
 		}
 	},
 }
@@ -56,15 +58,15 @@ func init() {
 	grpcServerCmd.Flags().StringVar(&dsn, "dsn", "host=127.0.0.1 user=calendar password=calendar dbname=calendar", "database connection string")
 }
 
-func construct(logger *zap.Logger, string string) *grpc.Server {
+func construct(logger *zap.Logger) (*grpc.Server, error) {
 	grpcServer := grpc.NewServer()
 	calendarRepo, err := maindb.NewPgEventRepository(dsn)
 	if err != nil {
-		log.Fatalf("Unable to create PG repository: %v", err)
+		return nil, err
 	}
 	calendarService := service.NewCalendarService(calendarRepo, time.Second*50)
 	server := calendarGrpc.NewCalendarServer(logger, calendarService)
 	calendarGrpc.RegisterCalendarServiceServer(grpcServer, server)
 
-	return grpcServer
+	return grpcServer, nil
 }
