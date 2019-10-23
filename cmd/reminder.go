@@ -37,8 +37,8 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	reminderCmd.AddCommand(reminder.WorkCmd)
-	reminderCmd.AddCommand(reminder.ConsumeCmd)
+	reminderCmd.AddCommand(reminder.WorkerCmd)
+	reminderCmd.AddCommand(reminder.ConsumerCmd)
 	RootCmd.AddCommand(reminderCmd)
 
 	// Here you will define your flags and configuration settings.

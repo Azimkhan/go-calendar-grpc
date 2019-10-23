@@ -22,10 +22,18 @@ import (
 )
 
 // Starts process that consumes reminders
-var ConsumeCmd = &cobra.Command{
-	Use:   "consume",
+var ConsumerCmd = &cobra.Command{
+	Use:   "consumer",
 	Short: "Shows incoming reminders",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("reminderConsumer called")
 	},
+}
+
+var clientAmqpUri string
+var clientAmqpQueue string
+
+func init() {
+	ConsumerCmd.Flags().StringVar(&clientAmqpUri, "amqpUri", "amqp://guest:guest@localhost:5672/", "AMQP connection string")
+	ConsumerCmd.Flags().StringVar(&clientAmqpQueue, "amqpQueue", "reminders", "AMQP queue name")
 }
