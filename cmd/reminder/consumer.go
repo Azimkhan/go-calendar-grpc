@@ -16,8 +16,8 @@ limitations under the License.
 package reminder
 
 import (
-	"fmt"
-
+	"github.com/Azimkhan/go-calendar-grpc/internal/configuration"
+	"github.com/Azimkhan/go-calendar-grpc/internal/rabbitmq"
 	"github.com/spf13/cobra"
 )
 
@@ -26,14 +26,18 @@ var ConsumerCmd = &cobra.Command{
 	Use:   "consumer",
 	Short: "Shows incoming reminders",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("reminderConsumer called")
+		logger := configuration.CreateLogger("configs/logger.json")
+		logger.Info("Reminder consumer started.")
+
+		consumer := rabbitmq.NewConsumer(clientAmqpUrl, workerQueueName, logger)
+		consumer.Run()
 	},
 }
 
-var clientAmqpUri string
+var clientAmqpUrl string
 var clientAmqpQueue string
 
 func init() {
-	ConsumerCmd.Flags().StringVar(&clientAmqpUri, "amqpUri", "amqp://guest:guest@localhost:5672/", "AMQP connection string")
+	ConsumerCmd.Flags().StringVar(&clientAmqpUrl, "amqpUrl", "amqp://guest:guest@localhost:5672/", "AMQP connection string")
 	ConsumerCmd.Flags().StringVar(&clientAmqpQueue, "amqpQueue", "reminders", "AMQP queue name")
 }

@@ -29,25 +29,25 @@ var WorkerCmd = &cobra.Command{
 	Short: "Monitors calendar and produces reminders",
 	Run: func(cmd *cobra.Command, args []string) {
 		logger := configuration.CreateLogger("configs/logger.json")
-		logger.Info("Reminder worker started.")
 		repo, err := maindb.NewPgEventRepository(dsn)
 
 		if err != nil {
 			logger.Fatal("Unable to create repository", zap.Error(err))
 		}
 
-		worker := rabbitmq.NewWorker(workerAmqpUri, workerQueueName, repo, logger)
+		worker := rabbitmq.NewWorker(workerAmqpUrl, workerQueueName, repo, logger)
 		defer worker.Close()
-		worker.Work()
+
+		worker.Run()
 	},
 }
 
 var dsn string
-var workerAmqpUri string
+var workerAmqpUrl string
 var workerQueueName string
 
 func init() {
 	WorkerCmd.Flags().StringVar(&dsn, "dsn", "host=127.0.0.1 user=calendar password=calendar dbname=calendar", "database connection string")
-	WorkerCmd.Flags().StringVar(&workerAmqpUri, "amqpUri", "amqp://guest:guest@localhost:5672/", "AMQP connection string")
+	WorkerCmd.Flags().StringVar(&workerAmqpUrl, "amqpUrl", "amqp://guest:guest@localhost:5672/", "AMQP connection string")
 	WorkerCmd.Flags().StringVar(&workerQueueName, "amqpQueue", "reminders", "AMQP queue name")
 }
